@@ -1,6 +1,6 @@
 {
   "homepage": "https://ethanpickett.github.io/quoteGenerator",
-  "name": "quoteGenerator",
+  "name": "quote-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
