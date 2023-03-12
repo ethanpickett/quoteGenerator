@@ -1,8 +1,5 @@
 import React from 'react';
 import './CSS/App.css';
-import { getQuote } from './Functions/quoteFunctions.js';
-
-
 
 let colors = [
   '#16a085',
@@ -18,6 +15,10 @@ let colors = [
   '#77B1A9',
   '#73A857'
 ];
+
+let quotes = [{quote: '', author: ''}];
+
+let randomIndex = 0;
 
 
 class App extends React.Component {
@@ -35,39 +36,53 @@ class App extends React.Component {
 
   //On click get random quote from array and set the state 
   handleClick () {
-      let randomQuote = getQuote();
+      
+      randomIndex = Math.floor(Math.random() * quotes.length)
 
       this.setState({
-          quote: randomQuote.quote,
-          author: randomQuote.author,
-          color: colors[Math.floor(Math.random() * 12)],
-          twitterURL: "https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=" +
-            encodeURIComponent('"' + randomQuote.quote + '" ' + randomQuote.author),
-          tumblrURL: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
-          encodeURIComponent(randomQuote.quote ) +
+        quote: quotes[randomIndex].quote,
+        author: quotes[randomIndex].author,
+        color: colors[Math.floor(Math.random() * 12)],
+        twitterURL: "https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=" +
+          encodeURIComponent('"' + quotes[randomIndex].quote + '" ' + quotes[randomIndex].author),
+        tumblrURL: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
+          encodeURIComponent(quotes[randomIndex].quote ) +
           '&content=' +
-          encodeURIComponent(randomQuote.author) +
+          encodeURIComponent(quotes[randomIndex].author) +
           '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
       });
   };
 
   //Get random quote on first Load
-  componentDidMount() {
-    let randomQuote = getQuote();
+  async componentDidMount() {
+    try {
+      const response = await fetch('https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json');
+      const responseJson = await response.json();
+      quotes = responseJson.quotes;
+  
+      randomIndex = Math.floor(Math.random() * quotes.length);
+  
+      this.setState({
+        quote: quotes[randomIndex].quote,
+        author: quotes[randomIndex].author,
+        color: colors[Math.floor(Math.random() * 12)],
+        twitterURL: "https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=" +
+            encodeURIComponent('"' + quotes[randomIndex].quote + '" ' + quotes[randomIndex].author),
+        tumblrURL: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
+            encodeURIComponent(quotes[randomIndex].quote ) +
+            '&content=' +
+            encodeURIComponent(quotes[randomIndex].author) +
+            '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+ 
+  
+  
 
-    this.setState({
-      quote: randomQuote.quote,
-      author: randomQuote.author,
-      color: colors[Math.floor(Math.random() * 12)],
-      twitterURL: 'https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' +
-          encodeURIComponent('"' + randomQuote.quote + '" ' + randomQuote.author),
-      tumblrURL: 'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
-          encodeURIComponent(randomQuote.quote ) +
-          '&content=' +
-          encodeURIComponent(randomQuote.author) +
-          '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
-    });
-  };
+
 
   render() {
 
