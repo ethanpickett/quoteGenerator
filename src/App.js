@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './CSS/App.css';
 import { getQuote } from './Functions/quoteFunctions.js';
 
